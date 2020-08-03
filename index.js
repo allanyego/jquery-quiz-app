@@ -1,5 +1,5 @@
 // Import stylesheets
-import "./style.css";
+// import "./style.css";
 
 /**
  * Created with JetBrains WebStorm.
@@ -9,55 +9,11 @@ import "./style.css";
  * To change this template use File | Settings | File Templates.
  */
 
-var questions = [
-  {
-    question: "What is the population of Brazil?",
-    choices: ["145 million", "199 million", "182 million", "205 million"],
-    correctAnswer: 1,
-    picked: null
-  },
-  {
-    question: "What is 27*14?",
-    choices: ["485", "634", "408", "528"],
-    correctAnswer: 2,
-    picked: null
-  },
-  {
-    question: "What is the busiest train station in the world?",
-    choices: [
-      "Grand Central, NY",
-      "Shibuya, Tokyo",
-      "Beijing Central, Chine",
-      "Gard du Nord, Paris"
-    ],
-    correctAnswer: 1,
-    picked: null
-  },
-  {
-    question: "What is the longest river?",
-    choices: ["Nile", "Amazon", "Mississippi", "Yangtze"],
-    correctAnswer: 0,
-    picked: null
-  },
-  {
-    question: "What is the busiest tube station in the London?",
-    choices: ["Waterloo", "Baker Street", "Kings Cross", "Victoria"],
-    correctAnswer: 0,
-    picked: null
-  }
-];
+let questions = [];
 
-function loadQuestions() {
+function loadQuestions(filename) {
   return new Promise((resolve, reject) => {
-    $.getJSON({
-      url: "test.json"
-    }).done(data => {
-      console.log(JSON.parse(data))
-      resolve(data)
-    }).fail((xhr, status, error) => {
-      console.log(xhr.)
-      console.log(error)
-    })
+    $.getJSON(filename).done(resolve).fail(reject);
   });
 }
 
@@ -65,19 +21,20 @@ var currentQuestion = 0;
 var correctAnswers = 0;
 var quizOver = false;
 
-$(document).ready(function() {
-  loadQuestions().then(res => {
-    console.log(res);
-  }).catch(err => {
-    console.error("ERROR", err);
-    console.log(err.responseText);
-  });
+$(document).ready(async function () {
+  try {
+    questions = await loadQuestions("questions.json");
+  } catch {
+    return;
+  }
+  questions = questions.map((q) => ({ ...q, picked: null }));
+
   // Display the first question
   displayCurrentQuestion();
   // On clicking next, display the next question
   $(this)
     .find(".nextBtn")
-    .on("click", function() {
+    .on("click", function () {
       if (!quizOver) {
         if (questions[currentQuestion].picked == null) {
           const correctAnswer = questions[currentQuestion].correctAnswer;
@@ -118,9 +75,7 @@ $(document).ready(function() {
               } else {
                 displayScore();
                 // Change the text in the next button to ask if user wants to play again
-                $(document)
-                  .find(".nextButton")
-                  .text("Play Again?");
+                $(document).find(".nextButton").text("Play Again?");
                 quizOver = true;
               }
               nextBtn.attr("disabled", false);
@@ -134,9 +89,7 @@ $(document).ready(function() {
       } else {
         // quiz is over and clicked the next button (which now displays 'Play Again?'
         quizOver = false;
-        $(document)
-          .find(".nextButton")
-          .text("Next Question");
+        $(document).find(".nextButton").text("Next Question");
         resetQuiz();
         displayCurrentQuestion();
         hideScore();
@@ -163,9 +116,7 @@ function displayCurrentQuestion() {
   $(questionClass).text(question);
 
   // Remove all current <li> elements (if any)
-  $(choiceList)
-    .find("div")
-    .remove();
+  $(choiceList).find("div").remove();
 
   // Disabled/hide buttons appropriately
   $(".previousBtn").attr("disabled", currentQuestion == 0);
@@ -191,8 +142,9 @@ function displayCurrentQuestion() {
         <label class="form-check-label" for="${"choice" + i}">
         <div class="card ${borderClass} ${correctAnswer}">
           <div class="card-body">
-            <input class="" type="radio" name="choice" id="${"choice" +
-              i}" value="${i}" ${picked && picked == i && "checked"}/>
+            <input class="" type="radio" name="choice" id="${
+              "choice" + i
+            }" value="${i}" ${picked && picked == i && "checked"}/>
             ${choice}
           </div>
         </div>
@@ -217,15 +169,11 @@ function displayScore() {
   $(document)
     .find(".quizContainer > .result")
     .text("You scored: " + correctAnswers + " out of: " + questions.length);
-  $(document)
-    .find(".quizContainer > .result")
-    .show();
+  $(document).find(".quizContainer > .result").show();
 }
 
 function hideScore() {
-  $(document)
-    .find(".result")
-    .hide();
+  $(document).find(".result").hide();
 }
 
 function displayAlert(parent, msg, type = "danger") {
@@ -235,5 +183,5 @@ function displayAlert(parent, msg, type = "danger") {
     </div>`
   );
   alert.prependTo(parent);
-  setTimeout(_ => alert.remove(), 3500);
+  setTimeout((_) => alert.remove(), 3500);
 }
