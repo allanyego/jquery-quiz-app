@@ -1,0 +1,27 @@
+h1, h2 {
+  font-family: Lato;
+}
+
+.quizContainer {
+  padding: 2em;
+}
+
+.question {
+  margin: 1em .5em 1.5em;
+}
+
+.choiceList {
+  display: grid;
+  grid-auto-flow: row;
+  gap: 1em;
+}
+
+.choiceList label {
+  width: 100%;
+}
+
+.btns .col {
+  display: flex;
+  justify-content: center;
+  padding: 1.25em 0;
+}
