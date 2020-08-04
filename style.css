@@ -1,13 +1,35 @@
-h1, h2 {
+h1,
+h2 {
   font-family: Lato;
 }
 
 .quizContainer {
   padding: 2em;
+  max-width: 840px;
+  margin: 0 auto;
+}
+
+.resultCard,
+.questionsCard {
+  display: none;
+}
+
+.questionsCard {
+  position: relative;
+  margin-top: 1em;
+}
+
+.questionsCard .timer {
+  width: fit-content;
+  padding: 0.75em 1em;
+  font-weight: 600;
+  position: absolute;
+  right: -1em;
+  top: -1em;
 }
 
 .question {
-  margin: 1em .5em 1.5em;
+  margin: 1em 0.5em 1.5em;
 }
 
 .choiceList {
