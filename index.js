@@ -131,6 +131,16 @@ function displayCurrentQuestion() {
 
   // Set the questionClass text to the current question
   $(questionClass).text(question);
+  const questionImages = $(".questionImages");
+  questionImages.empty();
+  const images = questions[currentQuestion].images || [];
+  if (images.length) {
+    for (let i = 0; i < images.length; i++) {
+      $(
+        `<img src="${images[i]}" class="rounded mx-auto d-block" alt="question attachment" />`
+      ).appendTo(questionImages);
+    }
+  }
 
   // Remove all current <li> elements (if any)
   $(choiceList).find("div").remove();

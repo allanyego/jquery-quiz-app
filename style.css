@@ -9,6 +9,18 @@ h2 {
   margin: 0 auto;
 }
 
+.questionImages {
+  margin-bottom: 1em;
+  width: 100%;
+  display: grid;
+  row-gap: 1em;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+}
+
+.questionImages img {
+  max-width: 250px;
+}
+
 .resultCard,
 .questionsCard {
   display: none;
@@ -29,7 +41,7 @@ h2 {
 }
 
 .question {
-  margin: 1em 0.5em 1.5em;
+  margin: 1em 0.5em 0.5em;
 }
 
 .choiceList {
