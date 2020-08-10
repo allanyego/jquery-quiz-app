@@ -54,8 +54,17 @@ h2 {
   width: 100%;
 }
 
-.btns .col {
+.btns .col,
+.resultBtnContainer {
   display: flex;
   justify-content: center;
+}
+
+.btns .col {
   padding: 1.25em 0;
+}
+
+.resultBtnContainer {
+  display: none;
+  margin-top: 1em;
 }
