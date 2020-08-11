@@ -7,6 +7,7 @@ function loadQuestions(filename) {
 }
 
 var currentQuestion = 0;
+let answered = 0;
 var correctAnswers = 0;
 var quizOver = false;
 let duration;
@@ -37,10 +38,11 @@ function startQuiz() {
   displayCurrentQuestion();
   startTimer();
   // On clicking next, display the next question
-  questionsCard.find(".nextBtn").on("click", onNextBtnClick);
-  questionsCard.find(".previousBtn").on("click", onPrevBtnClick);
+  questionsCard.find(".nextBtn").off().on("click", onNextBtnClick);
+  questionsCard.find(".previousBtn").off().on("click", onPrevBtnClick);
   questionsCard
     .find(".resultBtnContainer button")
+    .off()
     .on("click", displayResultCard);
 }
 
@@ -52,6 +54,7 @@ function onNextBtnClick() {
       const correctOption = $(`input[type='radio'][value='${correctAnswer}']`);
 
       const value = pickedOption.val();
+      console.log("Picked value", value);
 
       if (value == undefined) {
         displayAlert(
@@ -77,6 +80,7 @@ function onNextBtnClick() {
         questions[currentQuestion].picked = Number(value);
 
         setTimeout(() => {
+          answered++;
           currentQuestion++; // Since we have already displayed the first question on DOM ready
           if (currentQuestion < questions.length) {
             displayCurrentQuestion();
@@ -90,6 +94,7 @@ function onNextBtnClick() {
         }, 3500);
       }
     } else {
+      console.log("Quiz is over, browsing questions");
       currentQuestion++;
       displayCurrentQuestion();
     }
@@ -122,7 +127,8 @@ function displayResultCard() {
   resultCard
     .find("#score")
     .text(Math.round((correctAnswers / questions.length) * 100) + "%");
-  resultCard.find("button").on("click", () => {
+
+  resultCard.find(".reviewBtn").on("click", () => {
     resultCard.hide();
     const questionsCard = $(".questionsCard");
     questionsCard.show();
@@ -130,6 +136,19 @@ function displayResultCard() {
     questionsCard.find(".previousBtn").off().on("click", onPrevBtnClick);
     displayCurrentQuestion();
   });
+
+  resultCard.find(".retakeBtn").on("click", resetQuiz);
+}
+
+function resetQuiz() {
+  questions = questions.map((q) => {
+    q.picked = null;
+    return q;
+  });
+  quizOver = beatTimer = false;
+  currentQuestion = answered = correctAnswers = 0;
+  $(".resultCard").hide();
+  startQuiz();
 }
 
 // This displays the current question AND the choices
@@ -206,8 +225,15 @@ function displayCurrentQuestion() {
     quizOver && currentQuestion === questions.length - 1
   );
 
+  const progressBar = $(".questionsCard").find(".progress-bar");
   if (quizOver) {
     $(".resultBtnContainer").css("display", "flex");
+    progressBar.hide();
+  } else {
+    progressBar.css(
+      "width",
+      Math.round((answered / questions.length) * 100) + "%"
+    );
   }
 }
 
